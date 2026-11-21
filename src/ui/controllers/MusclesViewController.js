@@ -1,6 +1,6 @@
 import { MUSCLE_CATALOG, MUSCLE_BY_ID } from '../../domain/catalogs/MuscleCatalog.js';
 import { MUSCLE_CATEGORIES } from '../../domain/catalogs/ExerciseCatalog.js';
-import { SvgBodyRenderer } from '../components/SvgBodyRenderer.js';
+import { HevyMuscleRenderer } from '../components/HevyMuscleRenderer.js';
 import { MuscleRecoveryModel } from '../../domain/models/MuscleRecoveryModel.js';
 import { FormatUtils } from '../../domain/utils/FormatUtils.js';
 
@@ -86,12 +86,12 @@ export class MusclesViewController {
 
       mgrid.innerHTML = filteredMuscles.map(m => {
         const st = MuscleRecoveryModel.getMuscleStatus(m.id, fatigue, state.stO);
-        const iconPath = MuscleRecoveryModel.getMuscleIconPath(m.id);
         const stIconSvg = MuscleRecoveryModel.getStatusIconSvg(st.key);
+        const muscle2dSvg = HevyMuscleRenderer.renderMiniCard(m.reg, st.key);
         return `
           <button type="button" class="mcard" data-mus="${m.id}">
-            <div class="mimg">
-              ${iconPath ? `<img src="${iconPath}" alt="${FormatUtils.escapeHtml(m.n)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:12px">` : SvgBodyRenderer.renderMiniBody(m.reg)}
+            <div class="mimg" style="background:transparent;border:none;overflow:visible">
+              ${muscle2dSvg}
               <span class="st"><span class="sti k-${st.key}">${stIconSvg}</span></span>
             </div>
             <b>${FormatUtils.escapeHtml(m.n)}</b>
@@ -110,18 +110,18 @@ export class MusclesViewController {
     const fatigue = this._readinessService.getFatigueMap();
     const st = MuscleRecoveryModel.getMuscleStatus(muscle.id, fatigue, state.stO);
     const exercises = this._exerciseService.getExercisesForMuscle(muscle.id);
-    const iconPath = MuscleRecoveryModel.getMuscleIconPath(muscle.id);
     const stIconSvg = MuscleRecoveryModel.getStatusIconSvg(st.key);
+    const detail2dSvg = HevyMuscleRenderer.renderMiniCard(muscle.reg, st.key);
 
     const content = `
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="width:64px;height:64px;border-radius:14px;overflow:hidden;flex:none;background:#F0F1F3;border:1px solid var(--line)">
-          ${iconPath ? `<img src="${iconPath}" alt="${FormatUtils.escapeHtml(muscle.n)}" style="width:100%;height:100%;object-fit:cover">` : SvgBodyRenderer.renderMiniBody(muscle.reg)}
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+        <div style="width:72px;height:96px;flex:none;background:var(--surface-2);border-radius:10px;padding:4px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center">
+          ${detail2dSvg}
         </div>
         <div>
           <h3 style="margin:0">${FormatUtils.escapeHtml(muscle.n)}</h3>
           <div style="font-size:13px;color:var(--soft)">${FormatUtils.escapeHtml(muscle.c)} · ${FormatUtils.escapeHtml(muscle.r)}</div>
-          <div style="margin-top:4px;display:flex;align-items:center;gap:6px"><span class="sti k-${st.key}">${stIconSvg}</span> <b>${st.label}</b></div>
+          <div style="margin-top:6px;display:flex;align-items:center;gap:6px"><span class="sti k-${st.key}">${stIconSvg}</span> <b>${st.label}</b></div>
         </div>
       </div>
 
