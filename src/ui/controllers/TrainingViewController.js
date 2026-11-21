@@ -47,8 +47,8 @@ export class TrainingViewController {
     const addBox = document.querySelector('#addBox');
     if (addBox) {
       addBox.innerHTML = `
-        <button type="button" class="btn sec block" id="btnAddExToPlan">
-          <span class="ms" aria-hidden="true">add</span> Adicionar exercício
+        <button type="button" class="btn sec block" id="btnAddExToPlan" style="display:inline-flex;align-items:center;justify-content:center;gap:6px">
+          <svg class="fi" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Adicionar exercício
         </button>
       `;
       const btnAdd = addBox.querySelector('#btnAddExToPlan');
@@ -103,11 +103,11 @@ export class TrainingViewController {
               <small>${ex ? FormatUtils.escapeHtml(ex.defaultSeriesRaw) : ''}</small>
             </div>
             <div class="stp2">
-              <button type="button" data-action="dec-sets" data-idx="${idx}"><span class="ms" aria-hidden="true">remove</span></button>
+              <button type="button" data-action="dec-sets" data-idx="${idx}" aria-label="Diminuir séries"><svg class="fi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
               <b class="num">${p.sets}×</b>
-              <button type="button" data-action="inc-sets" data-idx="${idx}"><span class="ms" aria-hidden="true">add</span></button>
+              <button type="button" data-action="inc-sets" data-idx="${idx}" aria-label="Aumentar séries"><svg class="fi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
             </div>
-            <button type="button" class="del" data-action="del-plan" data-idx="${idx}"><span class="ms" aria-hidden="true">close</span></button>
+            <button type="button" class="del" data-action="del-plan" data-idx="${idx}" aria-label="Remover do plano"><svg class="fi" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           </div>
         `;
       }).join('');

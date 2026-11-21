@@ -84,7 +84,7 @@ export class TodayViewController {
       ];
       rkEl.innerHTML = labels.map(([k, l]) => `
         <div>
-          <span class="sti k-${k}"><span class="ms" aria-hidden="true">${MuscleRecoveryModel.STATUS_ICONS[k]}</span></span>
+          <span class="sti k-${k}">${MuscleRecoveryModel.getStatusIconSvg(k)}</span>
           <b class="num">${counts[k]}</b>
           <small>${l}</small>
         </div>
@@ -162,7 +162,7 @@ export class TodayViewController {
                   <strong>${FormatUtils.escapeHtml(e.name)}</strong>
                   <div style="font-size:12px;color:var(--soft)">${FormatUtils.escapeHtml(e.defaultSeriesRaw)}</div>
                 </div>
-                <span class="sti k-${st.key}"><span class="ms" aria-hidden="true">${MuscleRecoveryModel.STATUS_ICONS[st.key]}</span></span>
+                <span class="sti k-${st.key}">${MuscleRecoveryModel.getStatusIconSvg(st.key)}</span>
               </li>
             `;
           }).join('')}

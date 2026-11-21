@@ -86,11 +86,13 @@ export class MusclesViewController {
 
       mgrid.innerHTML = filteredMuscles.map(m => {
         const st = MuscleRecoveryModel.getMuscleStatus(m.id, fatigue, state.stO);
+        const iconPath = MuscleRecoveryModel.getMuscleIconPath(m.id);
+        const stIconSvg = MuscleRecoveryModel.getStatusIconSvg(st.key);
         return `
           <button type="button" class="mcard" data-mus="${m.id}">
             <div class="mimg">
-              ${SvgBodyRenderer.renderMiniBody(m.reg)}
-              <span class="st"><span class="sti k-${st.key}"><span class="ms" aria-hidden="true">${MuscleRecoveryModel.STATUS_ICONS[st.key]}</span></span></span>
+              ${iconPath ? `<img src="${iconPath}" alt="${FormatUtils.escapeHtml(m.n)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:12px">` : SvgBodyRenderer.renderMiniBody(m.reg)}
+              <span class="st"><span class="sti k-${st.key}">${stIconSvg}</span></span>
             </div>
             <b>${FormatUtils.escapeHtml(m.n)}</b>
             <small>${st.label}</small>
@@ -108,16 +110,18 @@ export class MusclesViewController {
     const fatigue = this._readinessService.getFatigueMap();
     const st = MuscleRecoveryModel.getMuscleStatus(muscle.id, fatigue, state.stO);
     const exercises = this._exerciseService.getExercisesForMuscle(muscle.id);
+    const iconPath = MuscleRecoveryModel.getMuscleIconPath(muscle.id);
+    const stIconSvg = MuscleRecoveryModel.getStatusIconSvg(st.key);
 
     const content = `
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="width:50px;height:75px">
-          ${SvgBodyRenderer.renderMiniBody(muscle.reg)}
+        <div style="width:64px;height:64px;border-radius:14px;overflow:hidden;flex:none;background:#F0F1F3;border:1px solid var(--line)">
+          ${iconPath ? `<img src="${iconPath}" alt="${FormatUtils.escapeHtml(muscle.n)}" style="width:100%;height:100%;object-fit:cover">` : SvgBodyRenderer.renderMiniBody(muscle.reg)}
         </div>
         <div>
           <h3 style="margin:0">${FormatUtils.escapeHtml(muscle.n)}</h3>
           <div style="font-size:13px;color:var(--soft)">${FormatUtils.escapeHtml(muscle.c)} · ${FormatUtils.escapeHtml(muscle.r)}</div>
-          <div style="margin-top:4px"><span class="sti k-${st.key}"><span class="ms" aria-hidden="true">${MuscleRecoveryModel.STATUS_ICONS[st.key]}</span></span> <b>${st.label}</b></div>
+          <div style="margin-top:4px;display:flex;align-items:center;gap:6px"><span class="sti k-${st.key}">${stIconSvg}</span> <b>${st.label}</b></div>
         </div>
       </div>
 

@@ -116,14 +116,14 @@ export class SettingsViewController {
       <div class="sec-h"><b>Instalação do Aplicativo</b></div>
       <div class="glass pad" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
         <div style="display:flex;align-items:center;gap:12px">
-          <span class="stat"><span class="ic t-acc"><span class="ms" aria-hidden="true">smartphone</span></span></span>
+          <span class="stat"><span class="ic t-acc"><svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg></span></span>
           <div style="flex:1">
             <b>Adicionar Fit Força à Tela Inicial</b>
             <small style="display:block;color:var(--soft);font-size:12px">PWA offline com acesso rápido instantâneo</small>
           </div>
         </div>
         <button type="button" class="btn sec block" id="btnInstalarPwaForce" style="display:flex;align-items:center;justify-content:center;gap:8px">
-          <span class="ms" aria-hidden="true">smartphone</span>
+          <svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
           Instalar / Como Adicionar
         </button>
       </div>
@@ -149,7 +149,7 @@ export class SettingsViewController {
       <div class="sec-h"><b>Sobre o Aplicativo</b></div>
       <div class="glass list" style="margin-bottom:14px">
         <div class="it"><div class="t"><b>Fit Força</b><small>Versão 1.5 · Musculação Inteligente &amp; Sobrecarga Progressiva</small></div></div>
-        <button type="button" class="row" id="btnPrivacyPolicyForce"><div class="t"><b>Política de Privacidade (LGPD)</b><small>Zero-Knowledge, Local-First e sem rastreadores</small></div><span class="ms go" aria-hidden="true">chevron_right</span></button>
+        <button type="button" class="row" id="btnPrivacyPolicyForce"><div class="t"><b>Política de Privacidade (LGPD)</b><small>Zero-Knowledge, Local-First e sem rastreadores</small></div><svg class="fi go" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
         <div class="it"><div class="t"><b>Catálogo Anatômico</b><small>41 músculos mapeados com estimativa de recuperação neuromuscular</small></div></div>
       </div>
 
@@ -159,17 +159,17 @@ export class SettingsViewController {
         <p style="font-size:13px;color:var(--soft);margin:0 0 4px">Este app é gratuito e independente. Você pode apoiar o desenvolvimento ou avaliar a sua experiência:</p>
         
         <button type="button" class="btn pri block" id="btnApoiarPixForce" style="display:flex;align-items:center;justify-content:center;gap:8px">
-          <span class="ms" aria-hidden="true">favorite</span>
+          <svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           Apoiar com PIX ou Bitcoin
         </button>
 
         <div style="display:flex;gap:10px">
           <button type="button" class="btn sec flex1" id="btnAvaliarAppForce" style="display:flex;align-items:center;justify-content:center;gap:6px">
-            <span class="ms" aria-hidden="true">star</span>
+            <svg class="fi" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             Avaliar (1 a 5 ★)
           </button>
           <button type="button" class="btn sec flex1" id="btnSugerirForce" style="display:flex;align-items:center;justify-content:center;gap:6px">
-            <span class="ms" aria-hidden="true">chat</span>
+            <svg class="fi" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             Sugerir / Feedback
           </button>
         </div>
