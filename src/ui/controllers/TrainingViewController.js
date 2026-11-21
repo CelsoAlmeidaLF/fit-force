@@ -21,10 +21,15 @@ export class TrainingViewController {
 
   init() {
     // Delegar cliques de subabas
-    const navSubtabs = document.querySelectorAll('[data-tv]');
+    const navSubtabs = document.querySelectorAll('.tabs[data-for="trv"] button[data-v]');
     navSubtabs.forEach(btn => {
-      btn.addEventListener('click', e => {
-        this._activeSubtab = btn.dataset.tv;
+      btn.addEventListener('click', () => {
+        this._activeSubtab = btn.dataset.v;
+        navSubtabs.forEach(b => {
+          const isMatch = b === btn;
+          b.setAttribute('aria-pressed', isMatch);
+          b.classList.toggle('on', isMatch);
+        });
         this.render();
       });
     });

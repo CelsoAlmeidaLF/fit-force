@@ -19,7 +19,7 @@
 <div class="app">
   <header class="top">
     <div class="hdr-app who"><img id="appIc" alt=""><div><small>Musculação inteligente</small><b>Fit Força</b></div></div>
-    <button class="ib" id="gear" aria-label="Configurações"><span class="ms" aria-hidden="true">settings</span></button>
+    <a class="ib" href="#config" id="gear" aria-label="Configurações"><span class="ms" aria-hidden="true">settings</span></a>
   </header>
 
   <section class="view" id="v-hoje">
@@ -72,6 +72,18 @@
     <div id="evo"></div>
     <div class="sec-h"><b>Sem treino há 14 dias</b></div>
     <div class="glass list" id="esq"></div>
+  </section>
+
+  <section class="view" id="v-config">
+    <h2>Configurações</h2>
+    <!-- Menu de Subseções das Configurações -->
+    <div class="tabs" id="cfgTabs" role="group" aria-label="Menu de Configurações" style="margin-bottom:14px">
+      <button type="button" data-cfg="treino" class="on" aria-pressed="true">Treino</button>
+      <button type="button" data-cfg="seguranca" aria-pressed="false">Segurança</button>
+      <button type="button" data-cfg="dados" aria-pressed="false">Backup</button>
+      <button type="button" data-cfg="sobre" aria-pressed="false">Sobre</button>
+    </div>
+    <div id="cfgContent"></div>
   </section>
 </div>
 

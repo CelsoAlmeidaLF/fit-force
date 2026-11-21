@@ -182,31 +182,33 @@ export class AppController {
 
   handleHashChange() {
     const rawHash = (window.location.hash || '#hoje').replace('#', '').trim();
-    const validTabs = ['hoje', 'musculos', 'treino', 'semana'];
+    const validTabs = ['hoje', 'musculos', 'treino', 'semana', 'config'];
     const activeTab = validTabs.includes(rawHash) ? rawHash : 'hoje';
 
     this._currentTab = activeTab;
 
     // Atualizar Barra Inferior
     document.querySelectorAll('nav a[data-v]').forEach(a => {
-      if (a.dataset.v === activeTab) {
-        a.classList.add('on');
-      } else {
-        a.classList.remove('on');
-      }
+      a.classList.toggle('on', a.dataset.v === activeTab);
     });
 
-    // Alternar Seções
+    // Atualizar Botão Gear no Topo
+    const gearBtn = document.querySelector('#gear');
+    if (gearBtn) {
+      gearBtn.classList.toggle('on', activeTab === 'config');
+    }
+
+    // Alternar Seções com classe .on e display
     validTabs.forEach(tab => {
       const section = document.querySelector(`#v-${tab}`);
       if (section) {
-        if (tab === activeTab) {
-          section.style.display = 'block';
-        } else {
-          section.style.display = 'none';
-        }
+        const isMatch = tab === activeTab;
+        section.classList.toggle('on', isMatch);
+        section.style.display = isMatch ? 'block' : 'none';
       }
     });
+
+    window.scrollTo({ top: 0, behavior: 'instant' });
 
     // Chamar render da View ativa
     if (activeTab === 'hoje') {
@@ -217,6 +219,8 @@ export class AppController {
       this._training.render();
     } else if (activeTab === 'semana') {
       this._week.render();
+    } else if (activeTab === 'config') {
+      this._settings.render();
     }
   }
 
