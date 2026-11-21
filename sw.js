@@ -1,10 +1,11 @@
 /* Fit Força — service worker modular. Troque VERSAO a cada atualização do app. */
-const VERSAO = 'forca-v1.6-hexagonal-20261121';
+const VERSAO = 'forca-v1.6.1-20261121';
 const ARQUIVOS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './src/Program.js',
+  './src/ui/styles/styles.css',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
