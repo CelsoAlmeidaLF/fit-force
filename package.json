@@ -1,0 +1,11 @@
+{
+  "name": "fit-force",
+  "version": "1.6.0",
+  "description": "Fit Força - Musculação e Prontidão Muscular (PWA Hexagonal Local-First)",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "author": "Celso de Almeida Leite F",
+  "license": "GPL-3.0"
+}
