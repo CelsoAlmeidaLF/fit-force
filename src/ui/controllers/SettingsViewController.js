@@ -116,14 +116,14 @@ export class SettingsViewController {
       <div class="sec-h"><b>Instalação do Aplicativo</b></div>
       <div class="glass pad" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
         <div style="display:flex;align-items:center;gap:12px">
-          <span class="stat"><span class="ic t-acc"><i data-icon="smartphone" data-size="20"></i></span></span>
+          <span class="stat"><span class="ic t-acc"><span class="ms" aria-hidden="true">smartphone</span></span></span>
           <div style="flex:1">
             <b>Adicionar Fit Força à Tela Inicial</b>
             <small style="display:block;color:var(--soft);font-size:12px">PWA offline com acesso rápido instantâneo</small>
           </div>
         </div>
         <button type="button" class="btn sec block" id="btnInstalarPwaForce" style="display:flex;align-items:center;justify-content:center;gap:8px">
-          <i data-icon="smartphone" data-size="18"></i>
+          <span class="ms" aria-hidden="true">smartphone</span>
           Instalar / Como Adicionar
         </button>
       </div>
@@ -149,7 +149,7 @@ export class SettingsViewController {
       <div class="sec-h"><b>Sobre o Aplicativo</b></div>
       <div class="glass list" style="margin-bottom:14px">
         <div class="it"><div class="t"><b>Fit Força</b><small>Versão 1.5 · Musculação Inteligente &amp; Sobrecarga Progressiva</small></div></div>
-        <button type="button" class="row" id="btnPrivacyPolicyForce"><div class="t"><b>Política de Privacidade (LGPD)</b><small>Zero-Knowledge, Local-First e sem rastreadores</small></div><i data-icon="chevron-right" data-size="18" class="go"></i></button>
+        <button type="button" class="row" id="btnPrivacyPolicyForce"><div class="t"><b>Política de Privacidade (LGPD)</b><small>Zero-Knowledge, Local-First e sem rastreadores</small></div><span class="ms go" aria-hidden="true">chevron_right</span></button>
         <div class="it"><div class="t"><b>Catálogo Anatômico</b><small>41 músculos mapeados com estimativa de recuperação neuromuscular</small></div></div>
       </div>
 
@@ -159,26 +159,22 @@ export class SettingsViewController {
         <p style="font-size:13px;color:var(--soft);margin:0 0 4px">Este app é gratuito e independente. Você pode apoiar o desenvolvimento ou avaliar a sua experiência:</p>
         
         <button type="button" class="btn pri block" id="btnApoiarPixForce" style="display:flex;align-items:center;justify-content:center;gap:8px">
-          <i data-icon="heart" data-size="18"></i>
+          <span class="ms" aria-hidden="true">favorite</span>
           Apoiar com PIX ou Bitcoin
         </button>
 
         <div style="display:flex;gap:10px">
           <button type="button" class="btn sec flex1" id="btnAvaliarAppForce" style="display:flex;align-items:center;justify-content:center;gap:6px">
-            <i data-icon="star" data-size="16"></i>
+            <span class="ms" aria-hidden="true">star</span>
             Avaliar (1 a 5 ★)
           </button>
           <button type="button" class="btn sec flex1" id="btnSugerirForce" style="display:flex;align-items:center;justify-content:center;gap:6px">
-            <i data-icon="message-square" data-size="16"></i>
+            <span class="ms" aria-hidden="true">chat</span>
             Sugerir / Feedback
           </button>
         </div>
       </div>
     `;
-
-    if (typeof window !== 'undefined' && window.FinancIcons && typeof window.FinancIcons.hydrate === 'function') {
-      window.FinancIcons.hydrate(container);
-    }
 
     // Conecta todos os listeners
     this._bindAllSettingsEvents(container, state);
