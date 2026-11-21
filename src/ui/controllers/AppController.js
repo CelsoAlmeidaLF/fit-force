@@ -1,7 +1,10 @@
 import { APP_ICON } from '../assets/AppIcon.js';
+import { PinPad } from '../components/PinPad.js';
+import { BiometricsAdapter } from '../../infrastructure/security/BiometricsAdapter.js';
+import { SecurityRecoveryService } from '../../infrastructure/security/SecurityRecoveryService.js';
 
 /**
- * Controller Central da Aplicação (Navegação, Ciclo de Vida e Coordenação de Views)
+ * Controller Central da Aplicação (Navegação, Ciclo de Vida, Coordenação de Views e Bloqueio por PIN)
  */
 export class AppController {
   constructor({
@@ -23,7 +26,9 @@ export class AppController {
     this._sheet = bottomSheet;
     this._toast = toast;
 
+    this._storage = this._settings._storage;
     this._currentTab = 'hoje';
+    this._unlocked = false;
   }
 
   init() {
@@ -59,6 +64,120 @@ export class AppController {
 
     // 5. Carga Inicial
     this.handleHashChange();
+
+    // 6. Verificação de Bloqueio por PIN (Proteção contra Olhares Curiosos)
+    this.checkAppLock();
+  }
+
+  checkAppLock() {
+    const state = this._storage.loadState();
+    const lockEl = document.querySelector('#lock');
+    if (!lockEl) return;
+
+    // Se o usuário possui PIN configurado e o bloqueio está ativo
+    if (state.pin && state.lockEnabled !== false && !this._unlocked) {
+      lockEl.hidden = false;
+      const box = lockEl.querySelector('.lockc');
+      if (box) {
+        PinPad.render(box, {
+          mode: 'verify',
+          title: 'Fit Força',
+          sub: 'Digite seu PIN para desbloquear.',
+          len: state.pinLen,
+          bio: !!state.bio,
+          onBio: async () => {
+            const ok = await BiometricsAdapter.authenticateBiometrics(state.bio);
+            if (ok) {
+              this._unlocked = true;
+              lockEl.hidden = true;
+              PinPad.clearActive();
+              this._toast.show('Acesso biométrico confirmado.');
+            }
+          },
+          check: async v => {
+            const h = await BiometricsAdapter.hashPin(v);
+            return h === state.pin;
+          },
+          onOk: () => {
+            this._unlocked = true;
+            lockEl.hidden = true;
+            PinPad.clearActive();
+            this._toast.show('Acesso liberado.');
+          },
+          onForgot: () => this.promptRecoverPin(state, lockEl)
+        });
+      }
+    } else {
+      lockEl.hidden = true;
+    }
+  }
+
+  promptRecoverPin(state, lockEl) {
+    this._sheet.open(`
+      <h3 style="margin-top:0">Recuperação de Acesso</h3>
+      <p style="font-size:13px;color:var(--soft);margin-bottom:12px">
+        Cole as suas 12 palavras na ordem correta ou digite o código Hash de 12 caracteres do seu Certificado de Segurança:
+      </p>
+
+      <div style="margin-bottom:12px">
+        <textarea id="inpRecoverySecret" class="f-in" rows="3" style="width:100%;resize:none;font-family:monospace;font-size:13px" placeholder="ex: borbulha lotado gradual ... ou XXXX-XXXX-XXXX" spellcheck="false" autocomplete="off"></textarea>
+      </div>
+
+      <div id="recError" style="color:var(--bad);font-size:12px;margin-bottom:12px;min-height:16px"></div>
+
+      <button type="button" class="btn pri block" id="btnValidateRecovery">Validar e Redefinir PIN</button>
+      <button type="button" class="btn sec block" id="btnCancelRecovery" style="margin-top:8px">Voltar</button>
+    `);
+
+    const btnCancel = document.querySelector('#btnCancelRecovery');
+    if (btnCancel) {
+      btnCancel.onclick = () => {
+        this._sheet.close();
+        this.checkAppLock();
+      };
+    }
+
+    const btnValidate = document.querySelector('#btnValidateRecovery');
+    if (btnValidate) {
+      btnValidate.onclick = async () => {
+        const inp = document.querySelector('#inpRecoverySecret');
+        const errEl = document.querySelector('#recError');
+        if (!inp) return;
+
+        const val = inp.value.trim();
+        const res = await SecurityRecoveryService.verifyRecoveryInput(val, state.seedHash, state.seedWords);
+
+        if (!res.ok) {
+          if (errEl) errEl.textContent = res.message || 'Segredo incorreto.';
+          return;
+        }
+
+        // Segredo válido! Permite criar um novo PIN imediatamente
+        this._sheet.open(`
+          <h3 style="margin-top:0;color:var(--accent)">Segredo Validado!</h3>
+          <p style="font-size:13px;color:var(--soft)">Defina seu novo PIN de 4 a 6 dígitos:</p>
+          <div id="pinBoxNew"></div>
+        `);
+
+        const boxNew = document.querySelector('#pinBoxNew');
+        if (boxNew) {
+          PinPad.renderCreationFlow(boxNew, {
+            onDone: async newPin => {
+              state.pin = await BiometricsAdapter.hashPin(newPin);
+              state.pinLen = newPin.length;
+              state.lockEnabled = true;
+              this._storage.saveState(state);
+
+              this._unlocked = true;
+              if (lockEl) lockEl.hidden = true;
+              PinPad.clearActive();
+              this._sheet.close();
+              this._toast.show('Novo PIN redefinido com sucesso! Acesso liberado.');
+            }
+          });
+        }
+      };
+    }
   }
 
   handleHashChange() {
