@@ -253,10 +253,12 @@ export class TrainingViewController {
     const content = `
       <h3 style="margin-top:0">Calculadora de Anilhas</h3>
       <p style="font-size:13px;color:var(--soft)">Descubra a combinação ideal de anilhas para cada lado da barra (barra olímpica 20 kg).</p>
-      <div style="display:flex;gap:10px;align-items:center;margin:16px 0">
-        <label style="font-weight:600">Carga total:</label>
-        <input type="number" id="inpPlateTotal" class="f-in" style="width:100px" value="60" step="2.5">
-        <span>kg</span>
+      <div class="f" style="margin:16px 0">
+        <label for="inpPlateTotal" style="font-weight:600">Carga total</label>
+        <div class="unit-wrap">
+          <input type="number" id="inpPlateTotal" value="60" step="2.5" inputmode="decimal">
+          <span class="unit">kg</span>
+        </div>
       </div>
       <div id="plateResultBox" class="glass pad" style="min-height:50px"></div>
     `;

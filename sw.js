@@ -1,5 +1,5 @@
 /* Fit Força — service worker modular. Troque VERSAO a cada atualização do app. */
-const VERSAO = 'forca-v1.6.3-20261121';
+const VERSAO = 'forca-v1.6.4-20261121';
 const ARQUIVOS = [
   './',
   './index.html',
@@ -11,6 +11,7 @@ const ARQUIVOS = [
   './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
   './src/apoio/apoio.css',
+  './src/apoio/stk-pkt-financ-icons.js',
   './src/apoio/stk-pkt-doacao.js',
   './src/apoio/stk-pkt-feedback.js',
   './src/apoio/stk-pkt-qrcode.js',

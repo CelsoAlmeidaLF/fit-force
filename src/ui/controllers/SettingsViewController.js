@@ -40,65 +40,65 @@ export class SettingsViewController {
       <!-- SEÇÃO 1: TREINO E FISIOLOGIA -->
       <div class="sec-h" style="margin-top:0"><b>Treino &amp; Recuperação</b></div>
       <div class="glass pad form" style="margin-bottom:14px">
-        <div style="margin-bottom:14px">
-          <label style="display:block;font-size:12px;color:var(--soft);margin-bottom:4px">Peso corporal (para cálculo calórico):</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input type="number" id="inpSetWeight" class="f-in" style="width:110px;font-weight:600" value="${currentWeight}" step="0.5">
-            <span style="font-size:14px">kg</span>
-            ${crossWeight ? `<small style="color:var(--ok);margin-left:8px">(Sincronizado: ${crossWeight} kg)</small>` : ''}
+        <div class="two">
+          <div class="f">
+            <label for="inpSetWeight">Peso corporal</label>
+            <div class="unit-wrap">
+              <input type="number" id="inpSetWeight" value="${currentWeight}" step="0.5" inputmode="decimal">
+              <span class="unit">kg</span>
+            </div>
+          </div>
+          <div class="f">
+            <label for="inpSetRest">Descanso entre séries</label>
+            <div class="unit-wrap">
+              <input type="number" id="inpSetRest" value="${rest}" step="15" min="15" max="600" inputmode="numeric">
+              <span class="unit">seg</span>
+            </div>
           </div>
         </div>
+        ${crossWeight ? `<small style="color:var(--ok);font-size:12px;margin:-4px 0 2px 2px;display:block">Sincronizado: ${crossWeight} kg</small>` : ''}
 
-        <div style="margin-bottom:14px">
-          <label style="display:block;font-size:12px;color:var(--soft);margin-bottom:4px">Intensidade de treino (MET Compêndio 2024):</label>
-          <select id="selSetMet" class="f-in" style="width:100%">
+        <div class="f">
+          <label for="selSetMet">Intensidade de treino (MET Compêndio 2024)</label>
+          <select id="selSetMet">
             <option value="3.5" ${met === 3.5 ? 'selected' : ''}>3.5 — Leve (Musculação padrão)</option>
             <option value="5.0" ${met === 5.0 ? 'selected' : ''}>5.0 — Moderado (Compostos pesados)</option>
             <option value="6.0" ${met === 6.0 ? 'selected' : ''}>6.0 — Vigoroso (Alta intensidade)</option>
           </select>
         </div>
 
-        <div style="margin-bottom:14px">
-          <label style="display:block;font-size:12px;color:var(--soft);margin-bottom:4px">Descanso padrão entre séries:</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input type="number" id="inpSetRest" class="f-in" style="width:110px;font-weight:600" value="${rest}" step="15" min="15" max="600">
-            <span style="font-size:14px">segundos (${Math.floor(rest/60)}m ${rest%60}s)</span>
-          </div>
-        </div>
+        <label class="swl" style="padding:4px 0">
+          <span>
+            <b style="display:block;font-weight:600">Progressão automática de carga</b>
+            <small style="color:var(--soft);display:block;margin-top:2px">Sugere aumento de peso ao atingir o teto de repetições</small>
+          </span>
+          <input type="checkbox" class="sw" id="chkProgOn" ${prog.on ? 'checked' : ''}>
+        </label>
 
-        <div style="margin-bottom:14px">
-          <label style="display:flex;align-items:center;justify-content:space-between;padding:4px 0">
-            <span><b>Progressão automática de carga</b><br><small style="color:var(--soft)">Sugere aumento de carga ao atingir as repetições</small></span>
-            <input type="checkbox" id="chkProgOn" ${prog.on ? 'checked' : ''} style="width:20px;height:20px;cursor:pointer">
-          </label>
-        </div>
-
-        <div style="margin-bottom:16px">
-          <label style="display:block;font-size:12px;color:var(--soft);margin-bottom:4px">Aumento sugerido por padrão:</label>
-          <select id="selProgInc" class="f-in" style="width:100%">
+        <div class="f" id="boxProgInc" style="${prog.on ? '' : 'display:none;'}">
+          <label for="selProgInc">Aumento sugerido por padrão</label>
+          <select id="selProgInc">
             <option value="1" ${prog.inc === 1 ? 'selected' : ''}>1 kg (Halteres / Isolados)</option>
             <option value="2.5" ${prog.inc === 2.5 ? 'selected' : ''}>2.5 kg (Recomendado / Compostos)</option>
             <option value="5" ${prog.inc === 5 ? 'selected' : ''}>5 kg (Agachamento / Terra)</option>
           </select>
         </div>
 
-        <button type="button" class="btn pri block" id="btnSaveTreinoCfg">Salvar Preferências de Treino</button>
+        <button type="button" class="btn pri block" id="btnSaveTreinoCfg" style="margin-top:4px">Salvar Preferências de Treino</button>
       </div>
 
       <!-- SEÇÃO 2: SEGURANÇA E PRIVACIDADE -->
       <div class="sec-h"><b>Segurança &amp; Privacidade</b></div>
       <div class="glass pad form" style="margin-bottom:14px">
-        <div style="margin-bottom:12px">
-          <label style="display:flex;align-items:center;justify-content:space-between;padding:4px 0">
-            <div>
-              <b style="font-size:14px">Bloqueio por PIN para Proteção</b>
-              <div style="color:var(--soft);font-size:12px;margin-top:2px">Exige PIN numérico ao retornar ao app</div>
-            </div>
-            <input type="checkbox" id="chkLockPinForce" ${isLocked ? 'checked' : ''} style="width:22px;height:22px;cursor:pointer">
-          </label>
-        </div>
+        <label class="swl" style="padding:4px 0">
+          <div>
+            <b style="font-weight:600">Bloqueio por PIN para Proteção</b>
+            <small style="color:var(--soft);display:block;margin-top:2px">Exige PIN numérico ao retornar ao app</small>
+          </div>
+          <input type="checkbox" class="sw" id="chkLockPinForce" ${isLocked ? 'checked' : ''}>
+        </label>
 
-        <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
           <button type="button" class="btn sec block" id="btnChangePinForce">
             ${state.pin ? 'Alterar PIN de Acesso' : 'Definir PIN de Acesso'}
           </button>
@@ -116,14 +116,14 @@ export class SettingsViewController {
       <div class="sec-h"><b>Instalação do Aplicativo</b></div>
       <div class="glass pad" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
         <div style="display:flex;align-items:center;gap:12px">
-          <span class="stat"><span class="ic t-acc"><span class="ms" aria-hidden="true">install_mobile</span></span></span>
+          <span class="stat"><span class="ic t-acc"><i data-icon="smartphone" data-size="20"></i></span></span>
           <div style="flex:1">
             <b>Adicionar Fit Força à Tela Inicial</b>
             <small style="display:block;color:var(--soft);font-size:12px">PWA offline com acesso rápido instantâneo</small>
           </div>
         </div>
         <button type="button" class="btn sec block" id="btnInstalarPwaForce" style="display:flex;align-items:center;justify-content:center;gap:8px">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
+          <i data-icon="smartphone" data-size="18"></i>
           Instalar / Como Adicionar
         </button>
       </div>
@@ -149,7 +149,7 @@ export class SettingsViewController {
       <div class="sec-h"><b>Sobre o Aplicativo</b></div>
       <div class="glass list" style="margin-bottom:14px">
         <div class="it"><div class="t"><b>Fit Força</b><small>Versão 1.5 · Musculação Inteligente &amp; Sobrecarga Progressiva</small></div></div>
-        <button type="button" class="row" id="btnPrivacyPolicyForce"><div class="t"><b>Política de Privacidade (LGPD)</b><small>Zero-Knowledge, Local-First e sem rastreadores</small></div><span class="ms go" aria-hidden="true">chevron_right</span></button>
+        <button type="button" class="row" id="btnPrivacyPolicyForce"><div class="t"><b>Política de Privacidade (LGPD)</b><small>Zero-Knowledge, Local-First e sem rastreadores</small></div><i data-icon="chevron-right" data-size="18" class="go"></i></button>
         <div class="it"><div class="t"><b>Catálogo Anatômico</b><small>41 músculos mapeados com estimativa de recuperação neuromuscular</small></div></div>
       </div>
 
@@ -159,28 +159,41 @@ export class SettingsViewController {
         <p style="font-size:13px;color:var(--soft);margin:0 0 4px">Este app é gratuito e independente. Você pode apoiar o desenvolvimento ou avaliar a sua experiência:</p>
         
         <button type="button" class="btn pri block" id="btnApoiarPixForce" style="display:flex;align-items:center;justify-content:center;gap:8px">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <i data-icon="heart" data-size="18"></i>
           Apoiar com PIX ou Bitcoin
         </button>
 
         <div style="display:flex;gap:10px">
           <button type="button" class="btn sec flex1" id="btnAvaliarAppForce" style="display:flex;align-items:center;justify-content:center;gap:6px">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <i data-icon="star" data-size="16"></i>
             Avaliar (1 a 5 ★)
           </button>
           <button type="button" class="btn sec flex1" id="btnSugerirForce" style="display:flex;align-items:center;justify-content:center;gap:6px">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <i data-icon="message-square" data-size="16"></i>
             Sugerir / Feedback
           </button>
         </div>
       </div>
     `;
 
+    if (typeof window !== 'undefined' && window.FinancIcons && typeof window.FinancIcons.hydrate === 'function') {
+      window.FinancIcons.hydrate(container);
+    }
+
     // Conecta todos os listeners
     this._bindAllSettingsEvents(container, state);
   }
 
   _bindAllSettingsEvents(container, state) {
+    // Toggle da progressão de carga
+    const chkProg = container.querySelector('#chkProgOn');
+    const boxProgInc = container.querySelector('#boxProgInc');
+    if (chkProg && boxProgInc) {
+      chkProg.onchange = () => {
+        boxProgInc.style.display = chkProg.checked ? '' : 'none';
+      };
+    }
+
     // 1. Salvar Preferências de Treino
     const btnSave = container.querySelector('#btnSaveTreinoCfg');
     if (btnSave) {
@@ -188,7 +201,6 @@ export class SettingsViewController {
         const inpWeight = container.querySelector('#inpSetWeight');
         const inpRest = container.querySelector('#inpSetRest');
         const selMet = container.querySelector('#selSetMet');
-        const chkProg = container.querySelector('#chkProgOn');
         const selInc = container.querySelector('#selProgInc');
 
         if (inpWeight) state.peso = Number(inpWeight.value) || 80;
@@ -460,53 +472,53 @@ export class SettingsViewController {
 
     container.innerHTML = `
       <div class="glass pad form">
-        <div class="sec-h" style="margin-top:0"><b>Fisiologia & Calorias</b></div>
+        <div class="sec-h" style="margin-top:0"><b>Treino &amp; Recuperação</b></div>
         
-        <div style="margin-bottom:14px">
-          <label style="display:block;font-size:12px;color:var(--soft);margin-bottom:4px">Peso corporal (para cálculo de calorias):</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input type="number" id="inpSetWeight" class="f-in" style="width:110px;font-weight:600" value="${currentWeight}" step="0.5">
-            <span style="font-size:14px">kg</span>
-            ${crossWeight ? `<small style="color:var(--ok);margin-left:8px">(Sincronizado do Fit Systekna: ${crossWeight} kg)</small>` : ''}
+        <div class="two">
+          <div class="f">
+            <label for="inpSetWeight">Peso corporal</label>
+            <div class="unit-wrap">
+              <input type="number" id="inpSetWeight" value="${currentWeight}" step="0.5" inputmode="decimal">
+              <span class="unit">kg</span>
+            </div>
+          </div>
+          <div class="f">
+            <label for="inpSetRest">Descanso entre séries</label>
+            <div class="unit-wrap">
+              <input type="number" id="inpSetRest" value="${rest}" step="15" min="15" max="600" inputmode="numeric">
+              <span class="unit">seg</span>
+            </div>
           </div>
         </div>
+        ${crossWeight ? `<small style="color:var(--ok);font-size:12px;margin:-4px 0 2px 2px;display:block">Sincronizado: ${crossWeight} kg</small>` : ''}
 
-        <div style="margin-bottom:14px">
-          <label style="display:block;font-size:12px;color:var(--soft);margin-bottom:4px">Intensidade de treino (MET Compêndio 2024):</label>
-          <select id="selSetMet" class="f-in" style="width:100%">
-            <option value="3.5" ${met === 3.5 ? 'selected' : ''}>3.5 — Leve (Musculação padrão / descansos normais)</option>
-            <option value="5.0" ${met === 5.0 ? 'selected' : ''}>5.0 — Moderado (Compostos pesados / supersets)</option>
-            <option value="6.0" ${met === 6.0 ? 'selected' : ''}>6.0 — Vigoroso (Circuitos / alta intensidade)</option>
+        <div class="f">
+          <label for="selSetMet">Intensidade de treino (MET Compêndio 2024)</label>
+          <select id="selSetMet">
+            <option value="3.5" ${met === 3.5 ? 'selected' : ''}>3.5 — Leve (Musculação padrão)</option>
+            <option value="5.0" ${met === 5.0 ? 'selected' : ''}>5.0 — Moderado (Compostos pesados)</option>
+            <option value="6.0" ${met === 6.0 ? 'selected' : ''}>6.0 — Vigoroso (Alta intensidade)</option>
           </select>
         </div>
 
-        <div class="sec-h" style="margin-top:16px"><b>Descanso & Cargas</b></div>
+        <label class="swl" style="padding:4px 0">
+          <span>
+            <b style="display:block;font-weight:600">Progressão automática de carga</b>
+            <small style="color:var(--soft);display:block;margin-top:2px">Sugere aumento de peso ao atingir o teto de repetições</small>
+          </span>
+          <input type="checkbox" class="sw" id="chkProgOn" ${prog.on ? 'checked' : ''}>
+        </label>
 
-        <div style="margin-bottom:14px">
-          <label style="display:block;font-size:12px;color:var(--soft);margin-bottom:4px">Descanso padrão entre séries:</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input type="number" id="inpSetRest" class="f-in" style="width:110px;font-weight:600" value="${rest}" step="15" min="15" max="600">
-            <span style="font-size:14px">segundos (${Math.floor(rest/60)}m ${rest%60}s)</span>
-          </div>
-        </div>
-
-        <div style="margin-bottom:14px">
-          <label style="display:flex;align-items:center;justify-content:space-between;padding:4px 0">
-            <span><b>Progressão automática de carga</b><br><small style="color:var(--soft)">Sugere aumento de carga ao bater as repetições alvo</small></span>
-            <input type="checkbox" id="chkProgOn" ${prog.on ? 'checked' : ''} style="width:20px;height:20px;cursor:pointer">
-          </label>
-        </div>
-
-        <div style="margin-bottom:18px">
-          <label style="display:block;font-size:12px;color:var(--soft);margin-bottom:4px">Aumento sugerido por padrão:</label>
-          <select id="selProgInc" class="f-in" style="width:100%">
+        <div class="f" id="boxProgInc" style="${prog.on ? '' : 'display:none;'}">
+          <label for="selProgInc">Aumento sugerido por padrão</label>
+          <select id="selProgInc">
             <option value="1" ${prog.inc === 1 ? 'selected' : ''}>1 kg (Halteres / Isolados)</option>
             <option value="2.5" ${prog.inc === 2.5 ? 'selected' : ''}>2.5 kg (Recomendado / Compostos)</option>
-            <option value="5" ${prog.inc === 5 ? 'selected' : ''}>5 kg (Agachamento / Levantamento Terra)</option>
+            <option value="5" ${prog.inc === 5 ? 'selected' : ''}>5 kg (Agachamento / Terra)</option>
           </select>
         </div>
 
-        <button type="button" class="btn pri block" id="btnSaveTreinoCfg">Salvar Preferências de Treino</button>
+        <button type="button" class="btn pri block" id="btnSaveTreinoCfg" style="margin-top:4px">Salvar Preferências de Treino</button>
       </div>
     `;
 
