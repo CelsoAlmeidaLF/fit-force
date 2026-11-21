@@ -9,7 +9,12 @@ const ARQUIVOS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
-  './icons/apple-touch-icon.png'
+  './icons/apple-touch-icon.png',
+  './src/apoio/apoio.css',
+  './src/apoio/stk-pkt-doacao.js',
+  './src/apoio/stk-pkt-feedback.js',
+  './src/apoio/stk-pkt-qrcode.js',
+  './src/apoio/stk-pkt-ponte.js'
 ];
 
 self.addEventListener('install', e => {
