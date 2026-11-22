@@ -87,11 +87,14 @@ export class MusclesViewController {
       mgrid.innerHTML = filteredMuscles.map(m => {
         const st = MuscleRecoveryModel.getMuscleStatus(m.id, fatigue, state.stO);
         const stIconSvg = MuscleRecoveryModel.getStatusIconSvg(st.key);
-        const muscle2dSvg = HevyMuscleRenderer.renderMiniCard(m.reg, st.key);
+        const iconPath = MuscleRecoveryModel.getMuscleIconPath(m.id);
+        const imgHtml = iconPath 
+          ? `<img src="${iconPath}" alt="${FormatUtils.escapeHtml(m.n)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:10px;display:block">` 
+          : HevyMuscleRenderer.renderMiniCard(m.reg, st.key);
         return `
           <button type="button" class="mcard" data-mus="${m.id}">
-            <div class="mimg" style="background:transparent;border:none;overflow:visible">
-              ${muscle2dSvg}
+            <div class="mimg" style="background:var(--surface-2);border-radius:10px;overflow:hidden;position:relative">
+              ${imgHtml}
               <span class="st"><span class="sti k-${st.key}">${stIconSvg}</span></span>
             </div>
             <b>${FormatUtils.escapeHtml(m.n)}</b>
@@ -111,12 +114,15 @@ export class MusclesViewController {
     const st = MuscleRecoveryModel.getMuscleStatus(muscle.id, fatigue, state.stO);
     const exercises = this._exerciseService.getExercisesForMuscle(muscle.id);
     const stIconSvg = MuscleRecoveryModel.getStatusIconSvg(st.key);
-    const detail2dSvg = HevyMuscleRenderer.renderMiniCard(muscle.reg, st.key);
+    const iconPath = MuscleRecoveryModel.getMuscleIconPath(muscle.id);
+    const detailThumb = iconPath
+      ? `<img src="${iconPath}" alt="${FormatUtils.escapeHtml(muscle.n)}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`
+      : HevyMuscleRenderer.renderMiniCard(muscle.reg, st.key);
 
     const content = `
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
-        <div style="width:72px;height:96px;flex:none;background:var(--surface-2);border-radius:10px;padding:4px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center">
-          ${detail2dSvg}
+        <div style="width:80px;height:96px;flex:none;background:var(--surface-2);border-radius:10px;overflow:hidden;border:1px solid var(--line);display:flex;align-items:center;justify-content:center">
+          ${detailThumb}
         </div>
         <div>
           <h3 style="margin:0">${FormatUtils.escapeHtml(muscle.n)}</h3>
