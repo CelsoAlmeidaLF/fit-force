@@ -1,6 +1,6 @@
 import { MUSCLE_CATALOG, MUSCLE_BY_ID } from '../../domain/catalogs/MuscleCatalog.js';
 import { MUSCLE_CATEGORIES } from '../../domain/catalogs/ExerciseCatalog.js';
-import { HevyMuscleRenderer } from '../components/HevyMuscleRenderer.js';
+import { MuscleFigureRenderer } from '../components/MuscleFigureRenderer.js';
 import { MuscleRecoveryModel } from '../../domain/models/MuscleRecoveryModel.js';
 import { FormatUtils } from '../../domain/utils/FormatUtils.js';
 
@@ -30,17 +30,17 @@ export class MusclesViewController {
     const catTabs = document.querySelector('#catTabs');
     if (catTabs) {
       catTabs.innerHTML = `
-        <div class="tabs" role="tablist">
+        <div class="tabs" role="group" aria-label="Região do corpo">
           ${MUSCLE_CATEGORIES.map(([id, label]) => `
-            <button type="button" class="${id === this._currentCategory ? 'on' : ''}" data-cat="${id}">${label}</button>
+            <button type="button" aria-pressed="${id === this._currentCategory}" data-cat="${id}">${label}</button>
           `).join('')}
         </div>
       `;
       catTabs.addEventListener('click', e => {
         const btn = e.target.closest('button[data-cat]');
         if (!btn) return;
-        catTabs.querySelectorAll('button').forEach(b => b.classList.remove('on'));
-        btn.classList.add('on');
+        catTabs.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+        btn.setAttribute('aria-pressed', 'true');
         this._currentCategory = btn.dataset.cat;
         this.render();
       });
@@ -87,13 +87,10 @@ export class MusclesViewController {
       mgrid.innerHTML = filteredMuscles.map(m => {
         const st = MuscleRecoveryModel.getMuscleStatus(m.id, fatigue, state.stO);
         const stIconSvg = MuscleRecoveryModel.getStatusIconSvg(st.key);
-        const iconPath = MuscleRecoveryModel.getMuscleIconPath(m.id);
-        const imgHtml = iconPath 
-          ? `<img src="${iconPath}" alt="${FormatUtils.escapeHtml(m.n)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:10px;display:block">` 
-          : HevyMuscleRenderer.renderMiniCard(m.reg, st.key);
+        const imgHtml = MuscleFigureRenderer.renderMuscleImage(m, { size: 'card' });
         return `
-          <button type="button" class="mcard" data-mus="${m.id}">
-            <div class="mimg" style="background:var(--surface-2);border-radius:10px;overflow:hidden;position:relative">
+          <button type="button" class="mcard s-${st.key}" data-mus="${m.id}" aria-label="${FormatUtils.escapeHtml(m.n)}: ${FormatUtils.escapeHtml(st.label)}">
+            <div class="mimg">
               ${imgHtml}
               <span class="st"><span class="sti k-${st.key}">${stIconSvg}</span></span>
             </div>
@@ -114,15 +111,12 @@ export class MusclesViewController {
     const st = MuscleRecoveryModel.getMuscleStatus(muscle.id, fatigue, state.stO);
     const exercises = this._exerciseService.getExercisesForMuscle(muscle.id);
     const stIconSvg = MuscleRecoveryModel.getStatusIconSvg(st.key);
-    const iconPath = MuscleRecoveryModel.getMuscleIconPath(muscle.id);
-    const detailThumb = iconPath
-      ? `<img src="${iconPath}" alt="${FormatUtils.escapeHtml(muscle.n)}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`
-      : HevyMuscleRenderer.renderMiniCard(muscle.reg, st.key);
+    const detailImg = MuscleFigureRenderer.renderMuscleImage(muscle, { size: 'detail' });
 
     const content = `
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
-        <div style="width:80px;height:96px;flex:none;background:var(--surface-2);border-radius:10px;overflow:hidden;border:1px solid var(--line);display:flex;align-items:center;justify-content:center">
-          ${detailThumb}
+        <div class="dhero dsm s-${st.key}">
+          ${detailImg}
         </div>
         <div>
           <h3 style="margin:0">${FormatUtils.escapeHtml(muscle.n)}</h3>
@@ -146,11 +140,11 @@ export class MusclesViewController {
 
       <div>
         <h4 style="margin:16px 0 8px">Exercícios associados (${exercises.length})</h4>
-        <div style="max-height:180px;overflow-y:auto">
+        <div style="max-height:180px;overflow-y:auto;padding-right:10px">
           ${exercises.map(e => `
             <div style="padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;display:flex;justify-content:space-between">
               <span>${FormatUtils.escapeHtml(e.name)}</span>
-              <small style="color:var(--soft)">${e.isPrimaryFor(muscle) ? 'Principal' : 'Sinérgico'}</small>
+              <small style="color:var(--soft)">${e.primaryMuscleId === muscle.id ? 'Principal' : 'Sinérgico'}</small>
             </div>
           `).join('')}
         </div>

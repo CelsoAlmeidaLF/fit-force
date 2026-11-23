@@ -5,7 +5,7 @@ export class BottomSheet {
   constructor(scrimElement, sheetElement) {
     this._scrim = scrimElement;
     this._sheet = sheetElement;
-    this._body = sheetElement ? sheetElement.querySelector('#shB') : null;
+    this._body = sheetElement ? sheetElement.querySelector('#shBody, #shB') : null;
     this._isOpen = false;
     this._onCloseCallback = null;
 

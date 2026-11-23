@@ -1,4 +1,4 @@
-import { SvgBodyRenderer } from '../components/SvgBodyRenderer.js';
+import { MuscleFigureRenderer } from '../components/MuscleFigureRenderer.js';
 import { MUSCLE_CATALOG } from '../../domain/catalogs/MuscleCatalog.js';
 import { SPLIT_SUGGESTIONS } from '../../domain/catalogs/ExerciseCatalog.js';
 import { MuscleRecoveryModel } from '../../domain/models/MuscleRecoveryModel.js';
@@ -22,16 +22,16 @@ export class TodayViewController {
     const segContainer = document.querySelector('#vHojeSeg');
     if (segContainer) {
       segContainer.innerHTML = `
-        <div class="seg" role="tablist">
-          <button type="button" class="on" data-view="front">Frente</button>
-          <button type="button" data-view="back">Costas</button>
+        <div class="seg two" role="group" aria-label="Vista do corpo">
+          <button type="button" aria-pressed="true" data-view="front">Frente</button>
+          <button type="button" aria-pressed="false" data-view="back">Costas</button>
         </div>
       `;
       segContainer.addEventListener('click', e => {
         const btn = e.target.closest('button[data-view]');
         if (!btn) return;
-        segContainer.querySelectorAll('button').forEach(b => b.classList.remove('on'));
-        btn.classList.add('on');
+        segContainer.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+        btn.setAttribute('aria-pressed', 'true');
         this._currentView = btn.dataset.view;
         this.renderBody();
       });
@@ -45,20 +45,34 @@ export class TodayViewController {
     const sugTabsContainer = document.querySelector('#sugTabs');
     if (sugTabsContainer) {
       sugTabsContainer.innerHTML = `
-        <div class="seg" role="tablist">
-          <button type="button" class="on" data-split="push">Push</button>
-          <button type="button" data-split="pull">Pull</button>
-          <button type="button" data-split="legs">Pernas</button>
-          <button type="button" data-split="core">Core</button>
+        <div class="tabs" role="group" aria-label="Divisão do treino">
+          <button type="button" aria-pressed="true" data-split="push">Push</button>
+          <button type="button" aria-pressed="false" data-split="pull">Pull</button>
+          <button type="button" aria-pressed="false" data-split="legs">Pernas</button>
+          <button type="button" aria-pressed="false" data-split="core">Core</button>
         </div>
       `;
       sugTabsContainer.addEventListener('click', e => {
         const btn = e.target.closest('button[data-split]');
         if (!btn) return;
-        sugTabsContainer.querySelectorAll('button').forEach(b => b.classList.remove('on'));
-        btn.classList.add('on');
+        sugTabsContainer.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+        btn.setAttribute('aria-pressed', 'true');
         this._currentSplit = btn.dataset.split;
         this.renderSuggestions();
+      });
+    }
+
+    const legendEl = document.querySelector('#bodyLegend');
+    if (legendEl) {
+      legendEl.addEventListener('click', e => {
+        const item = e.target.closest('[data-mus]');
+        if (!item) return;
+        const muscle = MUSCLE_CATALOG.find(m => m.id === item.dataset.mus);
+        if (!muscle) return;
+        const state = this._storage.loadState();
+        const fatigue = this._readinessService.getFatigueMap();
+        const st = MuscleRecoveryModel.getMuscleStatus(muscle.id, fatigue, state.stO);
+        this._toast.show(`${muscle.n}: ${st.label}`);
       });
     }
   }
@@ -130,7 +144,12 @@ export class TodayViewController {
       statusMap[m.id] = MuscleRecoveryModel.getMuscleStatus(m.id, fatigue, state.stO);
     });
 
-    bodyHojeEl.innerHTML = SvgBodyRenderer.renderFullInteractiveView(this._currentView, statusMap);
+    bodyHojeEl.innerHTML = MuscleFigureRenderer.renderBodyView(this._currentView);
+
+    const legendEl = document.querySelector('#bodyLegend');
+    if (legendEl) {
+      legendEl.innerHTML = MuscleFigureRenderer.renderLegend(MUSCLE_CATALOG, statusMap, { viewKey: this._currentView });
+    }
   }
 
   renderSuggestions() {

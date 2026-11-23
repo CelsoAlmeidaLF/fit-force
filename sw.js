@@ -1,5 +1,5 @@
 /* Fit Força — service worker modular. Troque VERSAO a cada atualização do app. */
-const VERSAO = 'forca-v1.6.5-20261121';
+const VERSAO = 'forca-v1.6.6-20261123';
 const ARQUIVOS = [
   './',
   './index.html',
